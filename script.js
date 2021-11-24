@@ -10,6 +10,7 @@ navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
 })
 
 captureButton.addEventListener('click', function() {
+  result.value = "loading...";
   const context = snapshot.getContext('2d')
   context.drawImage(player, 0, 0, snapshotZone.width, snapshotZone.height)
   // Tesseract.recognize(snapshotZone, 'jpn', { logger: m => console.log(m) }) // 日本語
@@ -17,8 +18,12 @@ captureButton.addEventListener('click', function() {
   .then(({ data: { words } }) => {
     var arrayLength = words.length;
     for (var i = 0; i < arrayLength; i++) {
-     console.log(words[i].text);
+      console.log(words[i].text)
+     if (words[i].text.includes('-') && words[i].text.length >2 )
+      result.value = words[i].text
      //Do something
+     if (i ==  arrayLength-1 && result.value =="loading...")
+        result.value = "No Cardnumber found!"
     }
   })
 })
